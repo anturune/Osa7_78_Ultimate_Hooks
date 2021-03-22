@@ -1,8 +1,10 @@
-  
+
 import React, { useState, useEffect } from 'react'
 import axios from 'axios'
+//Custom hookin importti ks. "/src/hooks/index.js"
+import { useField, useResource } from './hooks'
 
-
+/*
 const useField = (type) => {
   const [value, setValue] = useState('')
 
@@ -34,23 +36,30 @@ const useResource = (baseUrl) => {
     resources, service
   ]
 }
-
+*/
 const App = () => {
+  //Custom Hookiet kenttien hallitsemiseen
   const content = useField('text')
   const name = useField('text')
   const number = useField('text')
 
+  //Custom Hookiet resurssien (hakeminen ja luominen) hallitsemiseen
   const [notes, noteService] = useResource('http://localhost:3005/notes')
   const [persons, personService] = useResource('http://localhost:3005/persons')
 
+  //Create napin toiminto Noteseille
   const handleNoteSubmit = (event) => {
     event.preventDefault()
     noteService.create({ content: content.value })
+    content.reset()
   }
- 
+  //Create napin toiminto henkilölle
   const handlePersonSubmit = (event) => {
     event.preventDefault()
-    personService.create({ name: name.value, number: number.value})
+    personService.create({ name: name.value, number: number.value })
+    name.reset()
+    number.reset()
+
   }
 
   return (
@@ -64,7 +73,7 @@ const App = () => {
 
       <h2>persons</h2>
       <form onSubmit={handlePersonSubmit}>
-        name <input {...name} /> <br/>
+        name <input {...name} /> <br />
         number <input {...number} />
         <button>create</button>
       </form>
